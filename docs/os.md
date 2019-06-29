@@ -18,10 +18,16 @@ Configure OS environment
 
 Before continue lets assume we've the following OS environment parameters:
 
- - Hostname: tarantool.org
+ - Hostname: ml.tarantool.org
  - IP: 198.137.202.1
 
 The domain should be already registered in DNS and properly resolved.
+Thus there should be at least the records
+
+```
+@	3600	 IN 	A	198.137.202.1
+@	3600	 IN 	MX	100	ml.tarantool.org.
+```
 
 Generate SSH key and authorize it (these actions are to be done on your
 _client_ machine from which you are planning to access the server and
