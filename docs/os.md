@@ -23,7 +23,9 @@ Before continue lets assume we've the following OS environment parameters:
 
 The domain should be already registered in DNS and properly resolved.
 
-Generate SSH key and authorize it.
+Generate SSH key and authorize it (these actions are to be done on your
+_client_ machine from which you are planning to access the server and
+manage it!)
 ```
 ssh-keygen -f ~/.ssh/devel_tarantool_id
 ssh-copy-id -i ~/.ssh/devel_tarantool_id root@tarantool.org
