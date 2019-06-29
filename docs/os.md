@@ -68,3 +68,23 @@ public (active)
   icmp-blocks: 
   rich rules: 
 ```
+
+Install automatic updates for critical security fixes
+```
+dnf install -y dnf-automatic
+```
+
+In `/etc/dnf/automatic.conf` set
+```
+[commands]
+upgrade_type = security
+download_updates = yes
+apply_updates = yes
+[emitters]
+emit_via = None
+```
+
+And enable it
+```
+systemctl enable --now dnf-automatic.timer
+```
