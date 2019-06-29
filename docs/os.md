@@ -39,6 +39,7 @@ PasswordAuthentication no
 UsePAM yes
 X11Forwarding no
 ```
+
 And restart the SSH service
 ```
 systemctl restart sshd
