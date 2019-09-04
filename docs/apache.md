@@ -3,7 +3,7 @@ Installing apache
 
 To install web server type
 ```
-dnf install -y logrotate httpd httpd-tools mod_ssl
+yum install -y logrotate httpd httpd-tools mod_ssl
 ```
 
 Then enable http and https traffic.
