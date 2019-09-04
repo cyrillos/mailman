@@ -1,33 +1,28 @@
 Installing OS
 =============
 
-As a base OS we use [Fedora 30](https://getfedora.org/en/workstation/download/) netinstall image.
-Just go to the site and download an appropriate iso file.
+As a base OS we use centos-7.5 series.
 
 The minimum VM parameters are:
 
  - 40G of disk space
- - 4G of memory
-
-Choose "Minimal install" when selecting software during setup wizard. We will
-install required packages later via command line. Don't forget to setup strong
-password for the `root` user.
+ - 2G of memory
 
 Configure OS environment
 ------------------------
 
 Before continue lets assume we've the following OS environment parameters:
 
- - Hostname: ml.tarantool.org
- - IP: 198.137.202.1
+ - Hostname: mailman.tarantool.org
+ - IP: 95.163.249.249
 
-The domain should be already registered in DNS and properly resolved.
-Thus there should be at least the records
-
-```
-@	3600	 IN 	A	198.137.202.1
-@	3600	 IN 	MX	100	ml.tarantool.org.
-```
+[//]: # The domain should be already registered in DNS and properly resolved.
+[//]: # Thus there should be at least the records
+[//]: # 
+[//]: # ```
+[//]: # @	3600	 IN 	A	198.137.202.1
+[//]: # @	3600	 IN 	MX	100	ml.tarantool.org.
+[//]: # ```
 
 Generate SSH key and authorize it (these actions are to be done on your
 _client_ machine from which you are planning to access the server and
@@ -51,15 +46,24 @@ And restart the SSH service
 systemctl restart sshd
 ```
 
+Install firewalld daemon
+```
+yum install firewalld
+systemctl enable firewalld
+systemctl start firewalld
+firewall-cmd --permanent --zone=public --add-interface=eth0
+firewall-cmd --reload
+```
+
 Make sure only a few ports are opened on public interface
 ```
 firewall-cmd --list-all
 public (active)
   target: default
   icmp-block-inversion: no
-  interfaces: enp1s0
+  interfaces: eth0
   sources: 
-  services: dhcpv6-client mdns ssh
+  services: ssh dhcpv6-client
   ports: 
   protocols: 
   masquerade: no
@@ -69,22 +73,22 @@ public (active)
   rich rules: 
 ```
 
-Install automatic updates for critical security fixes
-```
-dnf install -y dnf-automatic
-```
-
-In `/etc/dnf/automatic.conf` set
-```
-[commands]
-upgrade_type = security
-download_updates = yes
-apply_updates = yes
-[emitters]
-emit_via = None
-```
-
-And enable it
-```
-systemctl enable --now dnf-automatic.timer
-```
+[//]: # Install automatic updates for critical security fixes
+[//]: # ```
+[//]: # dnf install -y dnf-automatic
+[//]: # ```
+[//]: # 
+[//]: # In `/etc/dnf/automatic.conf` set
+[//]: # ```
+[//]: # [commands]
+[//]: # upgrade_type = security
+[//]: # download_updates = yes
+[//]: # apply_updates = yes
+[//]: # [emitters]
+[//]: # emit_via = None
+[//]: # ```
+[//]: # 
+[//]: # And enable it
+[//]: # ```
+[//]: # systemctl enable --now dnf-automatic.timer
+[//]: # ```
