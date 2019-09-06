@@ -95,3 +95,37 @@ http {
 
 After that put some content into /var/www/index.html which
 should appear at http://dev.tarantool.org address.
+
+Next setup [certbot](certbot.md) to process configuring https
+access. Once configured continue from this point.
+
+Once certificates are generated the `server` section above
+should be changed to the following
+```
+    server {
+        listen          80 default_server;
+        server_name     _;
+        return 301 https://$host$request_uri;
+    }
+
+    server {
+        listen          443 ssl;
+        server_name     dev.tarantool.org;
+
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+
+        index   index.html;
+        root    /var/www;
+
+        location / {
+        }
+
+        ssl_certificate /etc/letsencrypt/live/dev.tarantool.org/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/dev.tarantool.org/privkey.pem; # managed by Certbot
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+    }
+```
+
+In result all http traffic gonna be redirected to https instance.
