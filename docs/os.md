@@ -13,8 +13,14 @@ Configure OS environment
 
 Before continue lets assume we've the following OS environment parameters:
 
- - Hostname: mailman.tarantool.org
+ - Hostname: dev.tarantool.org
  - IP: 95.163.249.249
+
+If the name is undefined yet due to fresh setup of the machine use `hostnamectl`
+
+```
+hostnamectl set-hostname dev.tarantool.org
+```
 
 Generate SSH key and authorize it (these actions are to be done on your
 _client_ machine from which you are planning to access the server and
