@@ -16,8 +16,12 @@ Before continue lets assume we've the following OS environment parameters:
  - Hostname: dev.tarantool.org
  - IP: 95.163.249.249
 
-If the name is undefined yet due to fresh setup of the machine use `hostnamectl`
+Asjust DNS records if they were not yet.
+```
+dev A 95.163.249.249
+```
 
+If the name is undefined yet due to fresh setup of the machine use `hostnamectl`
 ```
 hostnamectl set-hostname dev.tarantool.org
 ```
