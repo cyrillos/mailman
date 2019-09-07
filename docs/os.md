@@ -21,6 +21,8 @@ Asjust DNS records if they were not yet.
 dev A 95.163.249.249
 ```
 
+Make sure the `PTR` record points to the correct name.
+
 If the name is undefined yet due to fresh setup of the machine use `hostnamectl`
 ```
 hostnamectl set-hostname dev.tarantool.org
