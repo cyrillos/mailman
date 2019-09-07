@@ -22,6 +22,12 @@ dev A 95.163.249.249
 ```
 
 Make sure the `PTR` record points to the correct name.
+```
+dig +noall +answer dev.tarantool.org
+dev.tarantool.org.	1635	IN	A	95.163.249.249
+dig +noall +answer -x 95.163.249.249
+249.249.163.95.in-addr.arpa. 3600 IN	PTR	249.mcs.mail.ru.
+```
 
 If the name is undefined yet due to fresh setup of the machine use `hostnamectl`
 ```
