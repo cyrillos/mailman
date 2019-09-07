@@ -7,5 +7,5 @@ one by one.
 
  - [nginx](nginx.md) to provide web access for mailing lists.
  - [certbot](certbot.md) to provide HTTPS access.
- - [opendkim](opendkim.md) to sign outcoming mails.
  - [postfix](postfix.md) as a primary mail server.
+ - [opendkim](opendkim.md) to sign outcoming mails.
