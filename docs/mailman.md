@@ -32,12 +32,19 @@ chkconfig --add spawn-fcgi
 
 In `/etc/mailman/mm_cfg.py` define
 ```
-DEFAULT_URL_HOST    = 'dev.tarantool.org'
+DEFAULT_URL_HOST    = 'lists.tarantool.org'
 DEFAULT_EMAIL_HOST  = 'dev.tarantool.org'
 DEFAULT_URL_PATTERN = 'https://%s/mailman/'
-PUBLIC_ARCHIVE_URL  = 'https://%(hostname)s/archives/%(listname)s'
+PUBLIC_ARCHIVE_URL  = 'https://%(hostname)s/pipermail/%(listname)s'
 MTA                 = 'Postfix'
 ```
+
+The case why `DEFAULT_URL_HOST` is different from
+`DEFAULT_EMAIL_HOST` is that initially we wanted to
+run mailman under `https://dev.tarantool.org/mailman`
+but it turned out that such urls are not really friendly
+for the mailman so that lists are placed under
+`https://lists.tarantool.org/`.
 
 And enable the mailman
 ```
@@ -49,13 +56,17 @@ In `/etc/nginx/fastcgi.conf` comment out
 #fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
 ```
 
-In `/etc/nginx/nginx.conf`, add the following to the `server` section
+In `/etc/nginx/nginx.conf`, add the following `server` section
 ```
-        location = /mailman {
+    server {
+        listen          443 ssl;
+        server_name     lists.tarantool.org;
+
+        location = / {
             rewrite ^ /mailman/listinfo permanent;
         }
 
-        location = /mailman/ {
+        location = /mailman {
             rewrite ^ /mailman/listinfo permanent;
         }
 
@@ -78,16 +89,27 @@ In `/etc/nginx/nginx.conf`, add the following to the `server` section
             alias /var/lib/mailman/archives/public;
             autoindex on;
         }
+
+        ssl_certificate /etc/letsencrypt/live/lists.tarantool.org/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/lists.tarantool.org/privkey.pem; # managed by Certbot
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+    }
 ```
 
-Since we're accessing mailman via `dev.tarantool.org/mailman` subpath
+And change the user nginx starts as
+```
+user nginx apache;
+```
+
+Since we're accessing mailman via `lists.tarantool.org/mailman` subpath
 define a symlink
 ```
 ln -s /usr/lib/mailman/cgi-bin /usr/lib/mailman/cgi-bin/mailman
 chown root:mailman /usr/lib/mailman/cgi-bin/mailman
 ```
 
-Create a new list
+Create a new site global list (if not created during installation)
 ```
 /usr/lib/mailman/bin/newlist mailman
 Enter the email of the person running the list: gorcunov@tarantool.org
@@ -95,8 +117,8 @@ Initial mailman password:
 Hit enter to notify mailman owner...
 ```
 
-Due to syslinux accessing `https://dev.tarantool.org/mailman` will cause
-a problem thus modify the rules
+Due to syslinux accessing `https://lists.tarantool.org/mailman`
+will cause a problem thus modify the rules
 ```
 grep nginx /var/log/audit/audit.log | audit2allow
 grep nginx /var/log/audit/audit.log | audit2allow -M nginx
@@ -112,4 +134,8 @@ systemctl enable mailman
 Finally reload the nginx
 ```
 systemctl reload nginx
+systemctl enable nginx
 ```
+
+Once the web part is operating we need to adjust
+`postfix` to process mailing lists mails.
