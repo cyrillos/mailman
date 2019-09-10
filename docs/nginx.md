@@ -99,8 +99,8 @@ should appear at http://dev.tarantool.org address.
 Next setup [certbot](certbot.md) to process configuring https
 access. Once configured continue from this point.
 
-Once certificates are generated the `server` section above
-should be changed to the following
+Once certificates are generated change the `server` section
+in `nginx.conf` to
 ```
     server {
         listen          80 default_server;
