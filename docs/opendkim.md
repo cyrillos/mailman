@@ -86,3 +86,8 @@ non_smtpd_milters       = $smtpd_milters
 milter_default_action   = accept
 milter_protocol         = 2
 ```
+
+And restart it
+```
+systemctl restart postfix
+```
