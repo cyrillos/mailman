@@ -58,24 +58,43 @@ unknown_local_recipient_reject_code = 550
 
 mynetworks_style = host
 
-in_flow_delay = 1s
-
 alias_maps = hash:/etc/aliases
-alias_database = hash:/etc/aliases
+recipient_delimiter = +
+owner_request_special = no
+
+in_flow_delay = 1s
 
 debug_peer_level = 2
 
 sendmail_path = /usr/sbin/sendmail.postfix
 newaliases_path = /usr/bin/newaliases.postfix
 mailq_path = /usr/bin/mailq.postfix
+
 setgid_group = postdrop
 
 html_directory = no
+manpage_directory = /usr/share/man
 
 # Up to 1M
 message_size_limit = 1048576
 
-smtpd_etrn_restrictions = reject
+smtp_use_tls = yes
+smtp_tls_note_starttls_offer = yes
+smtp_tls_protocols = !SSLv2, !SSLv3
+
+smtpd_use_tls = yes
+smtpd_tls_auth_only = yes
+smtpd_tls_security_level = may
+smtpd_tls_protocols = !SSLv2, !SSLv3
+smtpd_tls_cert_file = /etc/letsencrypt/live/dev.tarantool.org/fullchain.pem
+smtpd_tls_key_file = /etc/letsencrypt/live/dev.tarantool.org/privkey.pem
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtpd_tls_session_cache_timeout = 3600s
+tls_random_source = dev:/dev/urandom
+
+#transport_maps = hash:/etc/postfix/transport
+
 disable_vrfy_command = yes
 show_user_unknown_table_name = no
 smtpd_helo_required = yes
@@ -118,13 +137,12 @@ smtpd_etrn_restrictions=
 #milter_protocol         = 2
 ```
 
-Hash it
-```
-postmap main.cfg
-```
-
 `master.cfg`
 ```
+# ==========================================================================
+# service type  private unpriv  chroot  wakeup  maxproc command + args
+#               (yes)   (yes)   (yes)   (never) (100)
+# ==========================================================================
 smtp      inet  n       -       n       -       -       smtpd -v
 pickup    unix  n       -       n       60      1       pickup
 cleanup   unix  n       -       n       -       0       cleanup
@@ -138,6 +156,7 @@ verify    unix  -       -       n       -       1       verify
 flush     unix  n       -       n       1000?   0       flush
 proxymap  unix  -       -       n       -       -       proxymap
 proxywrite unix -       -       n       -       1       proxymap
+smtp      unix  -       -       n       -       -       smtp
 relay     unix  -       -       n       -       -       smtp
 showq     unix  n       -       n       -       -       showq
 error     unix  -       -       n       -       -       error
@@ -148,11 +167,6 @@ virtual   unix  -       n       n       -       -       virtual
 lmtp      unix  -       -       n       -       -       lmtp
 anvil     unix  -       -       n       -       1       anvil
 scache    unix  -       -       n       -       1       scache
-```
-
-And hash it
-```
-postmap master.cf
 ```
 
 Since we have certbot installed lets setup STARTTLS with
