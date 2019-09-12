@@ -113,7 +113,7 @@ Create a new site global list (if not created during installation)
 ```
 /usr/lib/mailman/bin/newlist mailman
 Enter the email of the person running the list: gorcunov@tarantool.org
-Initial mailman password: 
+Initial mailman password:
 Hit enter to notify mailman owner...
 ```
 
@@ -137,5 +137,26 @@ systemctl reload nginx
 systemctl enable nginx
 ```
 
-Once the web part is operating we need to adjust
-`postfix` to process mailing lists mails.
+Once the web part is operating we need to adjust `postfix` to process
+mailing lists mails.
+
+Run
+```
+/usr/lib/mailman/bin/genaliases
+postalias /etc/mailman/aliases
+```
+
+which will generate `/etc/mailman/aliases.db`.
+
+Now we need to hook this aliases to `postfix` via `main.cfg`.
+```
+alias_maps = hash:/etc/aliases,hash:/etc/mailman/aliases
+```
+
+And restart `postfix`
+```
+systemctl restart postfix
+```
+
+Note that every time new list is created via mailman interface
+we need to update `/etc/mailman/aliases` map and restart postfix.
