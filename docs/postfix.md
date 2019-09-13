@@ -12,12 +12,22 @@ dev IN MX 100 dev.tarantool.org.
 Make sure that you already have properly configured `A`
 and `PTR` records. See [configure os environment](os.md)
 section. Note that we will need to adjust DNS records
-more for SPF and OpenDKIM sake later.
+more OpenDKIM sake later.
 
 Test the settings
 ```
 dig -t mx dev.tarantool.org
 dev.tarantool.org.	3600	IN	MX	100 dev.tarantool.org.
+```
+
+Make sure the SPF record has the IP address of the host
+```
+@	TXT	v=spf1 ipv4:95.163.249.249 a mx ~all
+```
+
+The DMARC record should be like
+```
+_dmarc.dev.tarantool.org IN TXT “v=DMARC1; p=none”
 ```
 
 Allow to listen for smtp traffic.
