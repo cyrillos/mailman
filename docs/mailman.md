@@ -109,6 +109,22 @@ ln -s /usr/lib/mailman/cgi-bin /usr/lib/mailman/cgi-bin/mailman
 chown root:mailman /usr/lib/mailman/cgi-bin/mailman
 ```
 
+Create site global password (which is similar to root user in system)
+```
+/usr/lib/mailman/bin/mmsitepass
+New site password:
+Again to confirm password:
+Password changed.
+```
+
+Create the list creator password
+```
+/usr/lib/mailman/bin/mmsitepass -c
+```
+
+See [manual](https://www.gnu.org/software/mailman/mailman-install/node44.html)
+for more details
+
 Create a new site global list (if not created during installation)
 ```
 /usr/lib/mailman/bin/newlist mailman
