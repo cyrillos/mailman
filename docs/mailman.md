@@ -37,6 +37,7 @@ DEFAULT_EMAIL_HOST  = 'dev.tarantool.org'
 DEFAULT_URL_PATTERN = 'https://%s/mailman/'
 PUBLIC_ARCHIVE_URL  = 'https://%(hostname)s/pipermail/%(listname)s'
 MTA                 = 'Postfix'
+REMOVE_DKIM_HEADERS = Yes
 ```
 
 The case why `DEFAULT_URL_HOST` is different from
