@@ -22,7 +22,7 @@ dev.tarantool.org.	3600	IN	MX	100 dev.tarantool.org.
 
 Make sure the SPF record has the IP address of the host
 ```
-@	TXT	v=spf1 ipv4:95.163.249.249 a mx ~all
+dev.tarantool.org.	TXT	v=spf1 ipv4:95.163.249.249 a mx ~all
 ```
 
 The DMARC record should be like
@@ -73,6 +73,8 @@ recipient_delimiter = +
 owner_request_special = no
 
 in_flow_delay = 1s
+default_destination_rate_delay = 30s
+default_destination_recipient_limit = 50
 
 debug_peer_level = 2
 
@@ -87,6 +89,8 @@ manpage_directory = /usr/share/man
 
 # Up to 1M
 message_size_limit = 1048576
+
+#smtpd_banner = ESMTP Postfix
 
 smtp_use_tls = yes
 smtp_tls_note_starttls_offer = yes
