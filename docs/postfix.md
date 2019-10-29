@@ -163,8 +163,12 @@ cleanup   unix  n       -       n       -       0       cleanup
 qmgr      unix  n       -       n       300     1       qmgr
 tlsmgr    unix  -       -       n       1000?   1       tlsmgr
 rewrite   unix  -       -       n       -       -       trivial-rewrite
-bounce    unix  -       -       n       -       0       bounce
-defer     unix  -       -       n       -       0       bounce
+#spammers may use it
+#bounce    unix  -       -       n       -       0       bounce
+bounce    unix  -       -       n       -       0       discard
+#same here
+#defer     unix  -       -       n       -       0       bounce
+defer     unix  -       -       n       -       0       discard
 trace     unix  -       -       n       -       0       bounce
 verify    unix  -       -       n       -       1       verify
 flush     unix  n       -       n       1000?   0       flush
