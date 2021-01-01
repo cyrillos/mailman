@@ -75,7 +75,7 @@ systemctl restart opendkim
 Probably should add `spf` and `_dmarc` records in DNS.
 ```
 v=spf1 a mx ip4:95.163.249.249 ~all
-_dmarc.dev.tarantool.org v=DMARC1; p=none
+_dmarc.dev.tarantool.org v=DMARC1; p=reject;
 ```
 
 Finally update `postfix` settings to start signing outgoing mails.

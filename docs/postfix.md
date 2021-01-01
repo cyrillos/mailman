@@ -27,7 +27,7 @@ dev.tarantool.org.	TXT	v=spf1 ipv4:95.163.249.249 a mx ~all
 
 The DMARC record should be like
 ```
-_dmarc.dev.tarantool.org IN TXT “v=DMARC1; p=none”
+_dmarc.dev.tarantool.org IN TXT “v=DMARC1; p=reject;”
 ```
 
 Allow to listen for smtp traffic.
