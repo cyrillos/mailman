@@ -24,9 +24,16 @@ FCGI_EXTRA_OPTIONS="-M 0700"
 OPTIONS="-u $FCGI_USER -g $FCGI_GROUP -s $FCGI_SOCKET -S $FCGI_EXTRA_OPTIONS -F 1 -P /var/run/spawn-fcgi.pid -- $FCGI_PROGRAM"
 ```
 
-Run and enable it
+For some reason on Fedora 33 there is no spawn-fcgi serive by default,
+so run SysV script first.
+```
+/etc/init.d/spawn-fcgi start
+```
+
+Which will make the service generated. Run and enable it.
 ```
 systemctl start spawn-fcgi
+systemctl enable spawn-fcgi
 chkconfig --add spawn-fcgi
 ```
 
@@ -102,6 +109,12 @@ And change the user nginx starts as
 ```
 user nginx apache;
 ```
+
+Make sure the `nginx` user is in `mailman` group.
+```
+sermod -aG mailman nginx
+```
+Otherwise `nginx` will not be able to read achives.
 
 Since we're accessing mailman via `lists.tarantool.org/mailman` subpath
 define a symlink
