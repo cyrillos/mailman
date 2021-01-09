@@ -47,6 +47,11 @@ It is assumed that config files are laying in `/etc/postfix` directory.
 At first we configure postfix without [STARTTLS](https://en.wikipedia.org/wiki/Opportunistic\_TLS).
 Later we will enhance the configuration.
 
+On Fedora 33 create the file
+```
+touch /etc/postfix/postfix-files
+```
+
 `main.cfg`
 ```
 queue_directory = /var/spool/postfix
@@ -149,6 +154,15 @@ smtpd_etrn_restrictions=
 #non_smtpd_milters       = $smtpd_milters
 #milter_default_action   = accept
 #milter_protocol         = 2
+```
+
+On Fedora 33 also add into `main.cfg`
+```
+readme_directory        = /usr/share/doc/postfix/README_FILES
+sample_directory        = /usr/share/doc/postfix/samples
+compatibility_level     = 2
+meta_directory          = /etc/postfix
+shlib_directory         = /usr/lib64/postfix
 ```
 
 `master.cfg`
